@@ -1,0 +1,37 @@
+{
+  "name": "ph-health-backend",
+  "version": "1.0.0",
+  "description": "This is a the server of ph healt project ",
+  "homepage": "https://github.com/nazmulxdev/PH-HEALTH-BACKEND#readme",
+  "bugs": {
+    "url": "https://github.com/nazmulxdev/PH-HEALTH-BACKEND/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nazmulxdev/PH-HEALTH-BACKEND.git"
+  },
+  "license": "ISC",
+  "author": "Md Nazmul Hossen",
+  "type": "module",
+  "main": "./src/server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node .dist/server.ts",
+    "build": "tsc",
+    "dev": "tsx watch ./src/server.ts",
+    "lint": "eslint ./src/**/*"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.3",
+    "eslint": "^10.0.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  }
+}

@@ -3,10 +3,10 @@
 import { NextFunction, Request, Response } from "express";
 
 import { ZodError } from "zod";
-import config from "../config/env";
 import AppError from "../shared/AppError";
 import { Prisma } from "../generated/prisma/client";
 import AppErrorResponse from "../shared/AppErrorResponse";
+import { config } from "../config/env";
 
 // better-auth APIError type
 interface BetterAuthAPIError extends Error {
@@ -54,8 +54,8 @@ const globalErrorHandler = (
   let code: string | undefined = undefined;
   let details: { field?: string; message: string }[] | undefined = undefined;
 
-  if (config.node_env !== "production") {
-    console.error("ERROR:", error);
+  if (config.NODE_ENV !== "production") {
+    console.error("ERROR from globalErrorHandler:", error);
   }
 
   //  Custom AppError

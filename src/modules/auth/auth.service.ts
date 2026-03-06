@@ -2,6 +2,7 @@
 
 import { UserStatus } from "../../generated/prisma/enums";
 import { auth } from "../../lib/auth";
+import { prisma } from "../../lib/prisma";
 import AppError from "../../shared/AppError";
 
 interface IRegisterPatientPayload {
@@ -27,14 +28,51 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
     },
   });
 
-  /**
-   * TODO : Create patient profile in transaction after signup patient in the user model
-   * */
-  //   const patient=await prisma.$transaction(async(txx)=>{
-  //     await txx.
-  //   })
+  if (!data.user) {
+    throw new AppError(
+      404,
+      "Patient registration failed.",
+      "REGISTRATION_FAILED",
+      [
+        {
+          field: "Patient registration.",
+          message: "Please, try again after a while.",
+        },
+      ],
+    );
+  }
 
-  return data;
+  try {
+    const patient = await prisma.$transaction(async (txx) => {
+      const patientTxx = await txx.patient.create({
+        data: {
+          userId: data.user.id,
+          name,
+          email,
+        },
+      });
+      return patientTxx;
+    });
+    return { ...data, patient };
+  } catch (error) {
+    console.error(error);
+    await prisma.user.delete({
+      where: {
+        id: data.user.id,
+      },
+    });
+    throw new AppError(
+      400,
+      "Failed to crete patient error.",
+      "FAILED_CREATE_PATIENT__PROFILE",
+      [
+        {
+          field: "Patient registration",
+          message: "Failed to registration. Please , try again",
+        },
+      ],
+    );
+  }
 };
 
 // sign in patient

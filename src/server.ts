@@ -1,7 +1,7 @@
 import app from "./app.js";
-import config from "./config/env.js";
+import { config } from "./config/env";
 
-const port = config.port;
+const port = config.PORT;
 
 const bootStrap = () => {
   try {

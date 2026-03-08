@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 
 interface IErrorDetail {
   field?: string;
@@ -14,6 +14,7 @@ interface IErrorResponse {
 }
 
 const AppErrorResponse = (
+  req: Request,
   res: Response,
   error: IErrorResponse,
   path: string,
@@ -23,6 +24,7 @@ const AppErrorResponse = (
     error,
     path,
     timestamp: new Date().toISOString(),
+    requestId: req.headers["x-request-id"] || crypto.randomUUID(),
   });
 };
 

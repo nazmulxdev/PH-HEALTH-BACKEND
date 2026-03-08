@@ -7,6 +7,7 @@ import AppError from "../shared/AppError";
 import { Prisma } from "../generated/prisma/client";
 import AppErrorResponse from "../shared/AppErrorResponse";
 import { config } from "../config/env";
+import extractPrismaMeta from "../utils/extractPrismaMeta";
 
 // better-auth APIError type
 interface BetterAuthAPIError extends Error {
@@ -159,10 +160,11 @@ const globalErrorHandler = (
   else if (error instanceof Prisma.PrismaClientKnownRequestError) {
     name = "DatabaseError";
     code = error.code;
+    const field = extractPrismaMeta(error.meta);
     switch (error.code) {
       case "P2002":
         statusCode = 409;
-        message = `Duplicate value for field: ${(error.meta as any)?.target}`;
+        message = `Duplicate value for field: ${field}`;
         break;
       case "P2025":
         statusCode = 404;
@@ -170,11 +172,11 @@ const globalErrorHandler = (
         break;
       case "P2003":
         statusCode = 400;
-        message = "Foreign key constraint failed";
+        message = `Foreign key constraint failed on field: ${field}`;
         break;
       case "P2014":
         statusCode = 400;
-        message = "Relation violation error";
+        message = `Relation violation on this field: ${field}`;
         break;
       case "P2016":
         statusCode = 400;
@@ -264,6 +266,7 @@ const globalErrorHandler = (
   }
 
   return AppErrorResponse(
+    req,
     res,
     {
       statusCode,

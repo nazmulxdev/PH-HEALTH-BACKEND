@@ -111,7 +111,6 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
               specialty: {
                 select: {
                   id: true,
-                  name: true,
                   title: true,
                 },
               },
@@ -131,12 +130,7 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
         id: userData.user.id,
       },
     });
-    throw new AppError(
-      500,
-      "Something went wrong",
-      "ERROR_SOMETHING_WENT_WRONG",
-      [{ field: "DOCTOR", message: "Something went wrong" }],
-    );
+    throw error;
   }
 };
 

@@ -61,17 +61,7 @@ const registerPatient = async (payload: IRegisterPatientPayload) => {
         id: data.user.id,
       },
     });
-    throw new AppError(
-      400,
-      "Failed to crete patient error.",
-      "FAILED_CREATE_PATIENT__PROFILE",
-      [
-        {
-          field: "Patient registration",
-          message: "Failed to registration. Please , try again",
-        },
-      ],
-    );
+    throw error;
   }
 };
 

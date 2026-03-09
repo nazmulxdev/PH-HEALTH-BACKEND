@@ -3,9 +3,11 @@ import express, { Application, Request, Response } from "express";
 import { indexRoutes } from "./routes";
 import globalErrorHandler from "./middlewares/globalErrorHandlers";
 import notFoundErrorHandler from "./middlewares/notFoundErrorHandler";
+import cookieParser from "cookie-parser";
 
 const app: Application = express();
 
+app.use(cookieParser());
 app.use(express.json());
 
 // specialty routes

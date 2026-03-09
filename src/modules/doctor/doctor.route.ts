@@ -9,6 +9,10 @@ router.get("/", doctorController.getAllDoctor);
 
 router.get("/:id", doctorController.getDoctorById);
 
+// update doctor
+
+router.patch("/:id", doctorController.updateDoctor);
+
 // delete doctor
 
 router.delete("/:id", doctorController.deleteDoctor);

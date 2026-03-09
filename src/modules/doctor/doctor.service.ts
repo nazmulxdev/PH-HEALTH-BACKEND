@@ -1,5 +1,7 @@
+import { UserStatus } from "../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import AppError from "../../shared/AppError";
+import { IUpdateDoctorPayload } from "./doctor.interface";
 // import { IUpdateDoctorPayload } from "./doctor.interface";
 // import { auth } from "../../lib/auth";
 // import { error } from "node:console";
@@ -27,14 +29,30 @@ const getDoctorById = async (id: string) => {
   const doctor = await prisma.doctor.findUnique({
     where: {
       id: id,
+      isDeleted: false,
     },
     include: {
+      user: true,
       specialties: {
         include: {
           specialty: true,
         },
       },
-      user: true,
+      appointments: {
+        include: {
+          patient: true,
+        },
+      },
+      doctorSchedules: {
+        include: {
+          schedule: true,
+        },
+      },
+      reviews: {
+        include: {
+          patient: true,
+        },
+      },
     },
   });
 
@@ -49,42 +67,60 @@ const getDoctorById = async (id: string) => {
 
 // update doctor by id
 
-// const updateDoctorById = async (id: string, payload: IUpdateDoctorPayload) => {
-//   const isExistDoctor = await prisma.doctor.findUnique({
-//     where: {
-//       id: id,
-//     },
-//   });
-//   if (!isExistDoctor || isExistDoctor.isDeleted === true) {
-//     throw new AppError(404, "Doctor not found", "ERROR_DOCTOR_NOT_FOUND", [
-//       { field: "DOCTOR", message: "Doctor not found" },
-//     ]);
-//   }
+const updateDoctorById = async (id: string, payload: IUpdateDoctorPayload) => {
+  const isExistDoctor = await prisma.doctor.findUnique({
+    where: {
+      id: id,
+    },
+  });
+  if (!isExistDoctor || isExistDoctor.isDeleted === true) {
+    throw new AppError(404, "Doctor not found", "ERROR_DOCTOR_NOT_FOUND", [
+      { field: "DOCTOR", message: "Doctor not found" },
+    ]);
+  }
 
-//   const { password, doctor } = payload;
+  const { specialties, doctor } = payload;
 
-//   const {
-//     name,
-//     email,
-//     profilePhoto,
-//     contactNumber,
-//     address,
-//     registrationNumber,
-//     experience,
-//     gender,
-//     appointmentFee,
-//     qualification,
-//     currentWorkingPlace,
-//     designation,
-//   } = doctor;
+  await prisma.$transaction(async (txx) => {
+    if (doctor) {
+      await txx.doctor.update({
+        where: {
+          id: id,
+        },
+        data: { ...doctor },
+      });
+    }
 
-//   if (password) {
-//     const userData = await auth.api.requestPasswordReset({
-//         body:{
-//             email:email,
-//         }
-//     })
-// };
+    if (specialties && specialties.length > 0) {
+      for (const specialty of specialties) {
+        const { specialtyId, shouldDelete } = specialty;
+        if (shouldDelete) {
+          await txx.doctorSpecialty.delete({
+            where: {
+              id: specialtyId,
+            },
+          });
+        } else {
+          await txx.doctorSpecialty.upsert({
+            where: {
+              doctorId_specialtyId: {
+                doctorId: id,
+                specialtyId,
+              },
+            },
+            update: {},
+            create: {
+              doctorId: id,
+              specialtyId: specialtyId,
+            },
+          });
+        }
+      }
+    }
+  });
+
+  return await getDoctorById(id);
+};
 
 // delete doctor
 
@@ -109,6 +145,8 @@ const deleteDoctor = async (id: string) => {
         },
         data: {
           isDeleted: true,
+          status: UserStatus.DELETED,
+          deletedAt: new Date(),
         },
       });
       await txx.doctor.update({
@@ -117,8 +155,21 @@ const deleteDoctor = async (id: string) => {
         },
         data: {
           isDeleted: true,
+          deletedAt: new Date(),
         },
       });
+      await txx.doctorSpecialty.deleteMany({
+        where: {
+          doctorId: id,
+        },
+      });
+      await txx.doctorSchedules.deleteMany({
+        where: {
+          doctorId: id,
+        },
+      });
+
+      return { message: "Doctor deleted successfully" };
     });
 
     return result;
@@ -136,6 +187,6 @@ const deleteDoctor = async (id: string) => {
 export const doctorService = {
   getAllDoctors,
   getDoctorById,
-  //   updateDoctorById,
+  updateDoctorById,
   deleteDoctor,
 };

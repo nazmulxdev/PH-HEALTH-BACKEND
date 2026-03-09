@@ -27,6 +27,11 @@ model Doctor {
 
     specialties DoctorSpecialty[]
 
+    appointments    Appointment[]
+    prescriptions   Prescription[]
+    reviews         Review[]
+    doctorSchedules DoctorSchedules[]
+
     // indexing
     @@index([email], name: "idx_doctor_email")
     @@index([isDeleted], name: "idx_doctor_isDeleted")

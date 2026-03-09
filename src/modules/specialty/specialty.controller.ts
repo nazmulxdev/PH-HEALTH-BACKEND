@@ -28,6 +28,7 @@ const createSpecialty = async (req: Request, res: Response) => {
 
 const getAllSpecialty = async (req: Request, res: Response) => {
   try {
+    console.log(req.user);
     const result = await specialtyService.getAllSpecialty();
 
     return res.status(201).send({

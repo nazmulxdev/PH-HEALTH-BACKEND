@@ -2,15 +2,18 @@ import { Request, Response } from "express";
 import catchAsync from "../../shared/catchAsync";
 import { doctorService } from "./doctor.service";
 import AppResponse from "../../shared/AppResponse";
+import { IQueryParams } from "../../interfaces/query.interface";
 
 const getAllDoctor = catchAsync(async (req: Request, res: Response) => {
-  const result = await doctorService.getAllDoctors();
+  const query = req.query as IQueryParams;
+  const result = await doctorService.getAllDoctors(query);
 
   AppResponse(res, {
     statusCode: 200,
     success: true,
     message: "Doctors fetched successfully",
-    data: result,
+    data: result.data,
+    meta: result.meta,
   });
 });
 

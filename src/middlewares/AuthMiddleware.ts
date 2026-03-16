@@ -8,7 +8,6 @@ import { jwtUtils } from "../utils/jwt";
 import AppError from "../shared/AppError";
 import status from "http-status";
 import { prisma } from "../lib/prisma";
-import { AuthUser } from "../types/express";
 
 const authMiddleware = (...roles: Array<Role>) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +30,7 @@ const authMiddleware = (...roles: Array<Role>) => {
       );
     }
 
-    if (!betterAuthSessionToken) {
+    if (betterAuthSessionToken) {
       const sessionExist = await prisma.session.findFirst({
         where: {
           token: betterAuthSessionToken,
@@ -111,6 +110,16 @@ const authMiddleware = (...roles: Array<Role>) => {
             ],
           );
         }
+
+        req.user = {
+          userId: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          status: user.status,
+          isDeleted: user.isDeleted,
+          emailVerified: user.emailVerified,
+        };
       }
     }
 
@@ -162,9 +171,6 @@ const authMiddleware = (...roles: Array<Role>) => {
         ],
       );
     }
-
-    req.user = verifyAccessToken.decoded as AuthUser;
-
     next();
   });
 };

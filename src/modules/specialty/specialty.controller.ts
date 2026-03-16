@@ -3,26 +3,20 @@
 
 import { Request, Response } from "express";
 import { specialtyService } from "./specialty.service";
+import catchAsync from "../../shared/catchAsync";
+import AppResponse from "../../shared/AppResponse";
 
-const createSpecialty = async (req: Request, res: Response) => {
-  try {
-    const payload = req.body;
-    const result = await specialtyService.createSpecialty(payload);
+const createSpecialty = catchAsync(async (req: Request, res: Response) => {
+  const payload = { ...req.body, icon: req.file?.path };
+  const result = await specialtyService.createSpecialty(payload);
 
-    return res.status(201).send({
-      success: true,
-      message: "Specialty created successfully.",
-      data: result,
-    });
-  } catch (error: any) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      message: "Failed to create specialty.",
-      error: error.message,
-    });
-  }
-};
+  AppResponse(res, {
+    success: true,
+    statusCode: 201,
+    message: "Specialty created successfully.",
+    data: result,
+  });
+});
 
 // get all specialty
 

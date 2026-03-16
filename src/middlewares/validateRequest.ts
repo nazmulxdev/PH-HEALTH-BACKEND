@@ -12,6 +12,9 @@ interface IValidationSchema {
 
 const validateRequest = (schema: IValidationSchema) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
+    }
     if (schema.body) {
       const result = await schema.body.safeParseAsync(req.body);
       if (!result.success) {

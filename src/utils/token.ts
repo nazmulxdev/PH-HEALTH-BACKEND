@@ -1,7 +1,6 @@
 import { JwtPayload, SignOptions } from "jsonwebtoken";
 import { jwtUtils } from "./jwt";
 import { config } from "../config/env";
-import ms, { StringValue } from "ms";
 import { cookieUtils } from "./cookie";
 import { Response } from "express";
 
@@ -26,7 +25,7 @@ const getRefreshToken = (payload: JwtPayload) => {
 };
 
 const setAccessTokenCookie = (res: Response, token: string) => {
-  const maxAge = ms(config.ACCESS_TOKEN_EXPIRES_IN as StringValue) / 1000;
+  const maxAge = config.ACCESS_TOKEN_EXPIRES_IN;
   cookieUtils.setCookie(res, "accessToken", token, {
     httpOnly: true,
     secure: true,
@@ -37,7 +36,7 @@ const setAccessTokenCookie = (res: Response, token: string) => {
 };
 
 const setRefreshTokenCookie = (res: Response, token: string) => {
-  const maxAge = ms(config.REFRESH_TOKEN_EXPIRES_IN as StringValue) / 1000;
+  const maxAge = config.REFRESH_TOKEN_EXPIRES_IN;
   cookieUtils.setCookie(res, "refreshToken", token, {
     httpOnly: true,
     secure: true,
@@ -48,8 +47,7 @@ const setRefreshTokenCookie = (res: Response, token: string) => {
 };
 
 const setBetterAuthSessionCookie = (res: Response, token: string) => {
-  const maxAge =
-    ms(config.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN as StringValue) / 1000;
+  const maxAge = config.BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN;
   cookieUtils.setCookie(res, "better-auth.session_token", token, {
     httpOnly: true,
     secure: true,
@@ -59,10 +57,33 @@ const setBetterAuthSessionCookie = (res: Response, token: string) => {
   });
 };
 
+const clearAllTokenFromCookies = (res: Response) => {
+  cookieUtils.clearCookie(res, "better-auth.session_token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+
+  cookieUtils.clearCookie(res, "refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+  cookieUtils.clearCookie(res, "accessToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+};
+
 export const jwtTokenUtils = {
   getAccessToken,
   getRefreshToken,
   setAccessTokenCookie,
   setRefreshTokenCookie,
   setBetterAuthSessionCookie,
+  clearAllTokenFromCookies,
 };

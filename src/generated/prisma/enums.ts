@@ -52,7 +52,7 @@ export type BloodGroup = (typeof BloodGroup)[keyof typeof BloodGroup]
 
 export const AppointmentStatus = {
   SCHEDULED: 'SCHEDULED',
-  INPROGRESs: 'INPROGRESs',
+  INPROGRESS: 'INPROGRESS',
   COMPLETED: 'COMPLETED',
   CANCELED: 'CANCELED'
 } as const
@@ -62,7 +62,8 @@ export type AppointmentStatus = (typeof AppointmentStatus)[keyof typeof Appointm
 
 export const PaymentStatus = {
   PAID: 'PAID',
-  UNPAID: 'UNPAID'
+  UNPAID: 'UNPAID',
+  PENDING: 'PENDING'
 } as const
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]

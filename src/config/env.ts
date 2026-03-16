@@ -1,5 +1,7 @@
 import "dotenv/config";
 
+// SUPER_ADMIN_EMAIL
+// SUPER_ADMIN_PASSWORD
 interface EnvConfig {
   PORT: string;
   DATABASE_URL: string;
@@ -12,6 +14,23 @@ interface EnvConfig {
   REFRESH_TOKEN_EXPIRES_IN: string;
   BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN: string;
   BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: string;
+  EMAIL_SENDER_SMTP_USER: string;
+  EMAIL_SENDER_SMTP_PASSWORD: string;
+  EMAIL_SENDER_SMTP_HOST: string;
+  EMAIL_SENDER_SMTP_PORT: string;
+  EMAIL_SENDER_SMTP_FROM: string;
+  GOOGLE_CLIENT_ID: string;
+  GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_CALLBACK_URL: string;
+  FRONTEND_URL: string;
+  CLOUDINARY_API_KEY: string;
+  CLOUDINARY_API_SECRET: string;
+  CLOUDINARY_CLOUD_NAME: string;
+  STRIPE_PUBLISHABLE_KEY: string;
+  STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET: string;
+  SUPER_ADMIN_EMAIL: string;
+  SUPER_ADMIN_PASSWORD: string;
 }
 
 const loadEEnvVariables = (): EnvConfig => {
@@ -27,6 +46,23 @@ const loadEEnvVariables = (): EnvConfig => {
     "REFRESH_TOKEN_EXPIRES_IN",
     "BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN",
     "BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE",
+    "EMAIL_SENDER_SMTP_USER",
+    "EMAIL_SENDER_SMTP_PASSWORD",
+    "EMAIL_SENDER_SMTP_HOST",
+    "EMAIL_SENDER_SMTP_PORT",
+    "EMAIL_SENDER_SMTP_FROM",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "GOOGLE_CALLBACK_URL",
+    "FRONTEND_URL",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET",
+    "CLOUDINARY_CLOUD_NAME",
+    "STRIPE_PUBLISHABLE_KEY",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "SUPER_ADMIN_EMAIL",
+    "SUPER_ADMIN_PASSWORD",
   ];
 
   requiredVariables.forEach((variable) => {
@@ -50,6 +86,24 @@ const loadEEnvVariables = (): EnvConfig => {
       .BETTER_AUTH_SESSION_TOKEN_EXPIRES_IN as string,
     BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE: process.env
       .BETTER_AUTH_SESSION_TOKEN_UPDATE_AGE as string,
+    EMAIL_SENDER_SMTP_USER: process.env.EMAIL_SENDER_SMTP_USER as string,
+    EMAIL_SENDER_SMTP_PASSWORD: process.env
+      .EMAIL_SENDER_SMTP_PASSWORD as string,
+    EMAIL_SENDER_SMTP_HOST: process.env.EMAIL_SENDER_SMTP_HOST as string,
+    EMAIL_SENDER_SMTP_PORT: process.env.EMAIL_SENDER_SMTP_PORT as string,
+    EMAIL_SENDER_SMTP_FROM: process.env.EMAIL_SENDER_SMTP_FROM as string,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID as string,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET as string,
+    GOOGLE_CALLBACK_URL: process.env.GOOGLE_CALLBACK_URL as string,
+    FRONTEND_URL: process.env.FRONTEND_URL as string,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY as string,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET as string,
+    CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME as string,
+    STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY as string,
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY as string,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
+    SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
+    SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
   };
 };
 

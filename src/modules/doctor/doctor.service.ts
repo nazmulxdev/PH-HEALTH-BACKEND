@@ -1,26 +1,76 @@
+import { Doctor, Prisma } from "../../generated/prisma/client";
 import { UserStatus } from "../../generated/prisma/enums";
+import { IQueryParams } from "../../interfaces/query.interface";
 import { prisma } from "../../lib/prisma";
 import AppError from "../../shared/AppError";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import {
+  doctorFilterableFields,
+  doctorIncludeConfig,
+  doctorSearchableFields,
+  doctorSortableFields,
+} from "./doctor.constant";
 import { IUpdateDoctorPayload } from "./doctor.interface";
 // import { IUpdateDoctorPayload } from "./doctor.interface";
 // import { auth } from "../../lib/auth";
 // import { error } from "node:console";
 
-// get all doctors
-const getAllDoctors = async () => {
-  const doctors = await prisma.doctor.findMany({
-    include: {
-      specialties: {
-        include: {
-          specialty: true,
-        },
-      },
-      user: true,
-    },
-  });
-  console.log(doctors);
+/*
+ 1. Search 
+ 2. Filtering
+ 3. Pagination
+ 4. Sorting
 
-  return doctors;
+
+ 5. Include : Related Data (e.g., appointments, reviews)
+ 6. Field selection 
+ 7. Meta : Total count, total pages, current page, etc.
+
+ // searching & filtering
+    searching = partial match ("cardio")
+    filtering = exact match ("specialty=cardology")
+
+*/
+
+// get all doctors
+const getAllDoctors = async (query: IQueryParams) => {
+  // const doctors = await prisma.doctor.findMany({
+  //   include: {
+  //     specialties: {
+  //       include: {
+  //         specialty: true,
+  //       },
+  //     },
+  //     user: true,
+  //   },
+  // });
+  // console.log(doctors);
+
+  // return doctors;
+
+  const queryBuilder = new QueryBuilder<
+    Doctor,
+    Prisma.DoctorWhereInput,
+    Prisma.DoctorInclude
+  >(prisma.doctor, query, {
+    searchableFields: doctorSearchableFields,
+    filterableFields: doctorFilterableFields,
+    sortableFields: doctorSortableFields,
+  });
+
+  const result = await queryBuilder
+    .search()
+    .filter()
+    .where({ isDeleted: false })
+    .include({
+      user: true,
+    })
+    .dynamicInclude(doctorIncludeConfig)
+    .paginate()
+    .sort()
+    .execute();
+
+  return result;
 };
 
 // get doctor by id

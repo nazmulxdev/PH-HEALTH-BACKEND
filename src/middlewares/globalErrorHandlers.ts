@@ -8,6 +8,7 @@ import { Prisma } from "../generated/prisma/client";
 import AppErrorResponse from "../shared/AppErrorResponse";
 import { config } from "../config/env";
 import extractPrismaMeta from "../utils/extractPrismaMeta";
+import { deleteFileFromCloudinary } from "../lib/cloudinary.config";
 
 // better-auth APIError type
 interface BetterAuthAPIError extends Error {
@@ -43,7 +44,7 @@ const isNodeSystemError = (err: unknown): err is NodeSystemError => {
   );
 };
 
-const globalErrorHandler = (
+const globalErrorHandler = async (
   error: unknown,
   req: Request,
   res: Response,
@@ -57,6 +58,16 @@ const globalErrorHandler = (
 
   if (config.NODE_ENV !== "production") {
     console.error("ERROR from globalErrorHandler:", error);
+  }
+
+  if (req.file) {
+    await deleteFileFromCloudinary(req.file.path);
+  }
+
+  if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+    const fileUrls = req.files.map((file) => file.path);
+
+    await Promise.all(fileUrls.map((url) => deleteFileFromCloudinary(url)));
   }
 
   //  Custom AppError

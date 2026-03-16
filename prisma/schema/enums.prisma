@@ -29,7 +29,7 @@ enum BloodGroup {
 
 enum AppointmentStatus {
     SCHEDULED
-    INPROGRESs
+    INPROGRESS
     COMPLETED
     CANCELED
 }
@@ -37,4 +37,5 @@ enum AppointmentStatus {
 enum PaymentStatus {
     PAID
     UNPAID
+    PENDING
 }

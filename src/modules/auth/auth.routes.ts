@@ -7,7 +7,7 @@ const router = Router();
 
 router.post("/register", authController.registerPatient);
 
-router.post("/signin", authController.signinPatient);
+router.post("/login", authController.signinPatient);
 
 router.get(
   "/me",

@@ -58,9 +58,54 @@ const deleteAdmin = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changeUserStatus = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as AuthUser;
+  const payload = req.body;
+
+  const result = await AdminService.changeUserStatus(user, payload);
+
+  AppResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User status changed successfully",
+    data: result,
+  });
+});
+
+const changeUserRole = catchAsync(async (req: Request, res: Response) => {
+  const user = req.user as AuthUser;
+  const payload = req.body;
+
+  const result = await AdminService.changeUserRole(user, payload);
+
+  AppResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User role changed successfully",
+    data: result,
+  });
+});
+
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  // const userId = req.params.id as string;
+  // const user = req.user as AuthUser;
+
+  const result = await AdminService.deleteUser();
+
+  AppResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "User deleted successfully",
+    data: result,
+  });
+});
+
 export const AdminController = {
   getAllAdmins,
   updateAdmin,
   deleteAdmin,
   getAdminById,
+  changeUserRole,
+  changeUserStatus,
+  deleteUser,
 };

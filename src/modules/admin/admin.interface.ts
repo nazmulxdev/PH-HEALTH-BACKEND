@@ -1,4 +1,4 @@
-import { Role } from "../../generated/prisma/enums";
+import { Role, UserStatus } from "../../generated/prisma/enums";
 
 export interface IUpdateAdminPayload {
   admin?: {
@@ -12,4 +12,14 @@ export interface IRequestUser {
   userId: string;
   role: Role;
   email: string;
+}
+
+export interface IChangeUserStatusPayload {
+  userId: string;
+  userStatus: UserStatus;
+}
+
+export interface IChangeUserRolePayload {
+  userId: string;
+  userRole: Role;
 }

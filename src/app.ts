@@ -60,7 +60,12 @@ app.use("/api/v1/", indexRoutes);
 
 // root routes
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to the ph health care.");
+  res.status(200).json({
+    message: "Welcome to the ph health care.",
+    success: true,
+    docs: "/api/v1/docs",
+    status: "Running",
+  });
 });
 
 // 404 handler

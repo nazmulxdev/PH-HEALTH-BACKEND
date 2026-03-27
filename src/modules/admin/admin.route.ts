@@ -30,4 +30,23 @@ router.delete(
   AdminController.deleteAdmin,
 );
 
+router.patch(
+  "/:id/status",
+  authMiddleware(Role.SUPER_ADMIN),
+  AdminController.changeUserStatus,
+);
+
+router.patch(
+  "/:id/role",
+  authMiddleware(Role.SUPER_ADMIN),
+  AdminController.changeUserRole,
+);
+
+// if needed then we will use or refactor this
+router.delete(
+  "/:id/user-delete",
+  authMiddleware(Role.SUPER_ADMIN),
+  AdminController.deleteUser,
+);
+
 export const AdminRoutes = router;

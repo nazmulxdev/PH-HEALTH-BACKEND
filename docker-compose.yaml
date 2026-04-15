@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:latest
+    container_name: ph-db
+    restart: always
+    environment:
+      POSTGRES_DB: ph-health
+      POSTGRES_PASSWORD: Nazmul@285$.
+    volumes:
+      - ph-pg-data:/var/lib/postgresql
+    networks:
+      - ph-net
+    ports:
+      - 5432:5432
+  server:
+    image: ph-server-dev
+    container_name: ph-server
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+      CHOKIDAR_INTERVAL: "300"
+    volumes:
+      - .:/app
+      - server-node-modules:/app/node_modules
+      - server-logs:/app/logs
+    working_dir: /app
+    command: sh -lc "npm install && npm run dev"
+    ports:
+      - 5000:5000
+    networks:
+      - ph-net
+
+volumes:
+  ph-pg-data:
+  server-node-modules:
+  server-logs:
+networks:
+  ph-net:

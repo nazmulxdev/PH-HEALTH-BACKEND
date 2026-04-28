@@ -10,6 +10,7 @@ import { doctorScheduleRoute } from "../modules/doctorSchedule/doctorSchedule.ro
 import { patientRoutes } from "../modules/patient/patient.route";
 import { statsRoute } from "../modules/stats/stats.route";
 import { paymentRoute } from "../modules/payment/payment.route";
+import { ragRoutes } from "../modules/rag/rag.route";
 
 const router = Router();
 
@@ -48,5 +49,9 @@ router.use("/dashboard", statsRoute);
 // payment route
 
 router.use("/payment", paymentRoute);
+
+// rag routes
+
+router.use("/rag", ragRoutes);
 
 export const indexRoutes = router;

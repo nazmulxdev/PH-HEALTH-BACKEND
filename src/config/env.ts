@@ -1,7 +1,5 @@
 import "dotenv/config";
 
-// SUPER_ADMIN_EMAIL
-// SUPER_ADMIN_PASSWORD
 interface EnvConfig {
   PORT: string;
   DATABASE_URL: string;
@@ -31,6 +29,10 @@ interface EnvConfig {
   STRIPE_WEBHOOK_SECRET: string;
   SUPER_ADMIN_EMAIL: string;
   SUPER_ADMIN_PASSWORD: string;
+  OPENROUTER_API_KEY: string;
+  OPENROUTER_EMBEDING_MODEL: string;
+  OENROUTER_LLM_MODEL: string;
+  REDIS_URL: string;
 }
 
 const loadEEnvVariables = (): EnvConfig => {
@@ -63,6 +65,9 @@ const loadEEnvVariables = (): EnvConfig => {
     "STRIPE_WEBHOOK_SECRET",
     "SUPER_ADMIN_EMAIL",
     "SUPER_ADMIN_PASSWORD",
+    "OPENROUTER_API_KEY",
+    "OPENROUTER_EMBEDING_MODEL",
+    "OENROUTER_LLM_MODEL",
   ];
 
   requiredVariables.forEach((variable) => {
@@ -104,6 +109,10 @@ const loadEEnvVariables = (): EnvConfig => {
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET as string,
     SUPER_ADMIN_EMAIL: process.env.SUPER_ADMIN_EMAIL as string,
     SUPER_ADMIN_PASSWORD: process.env.SUPER_ADMIN_PASSWORD as string,
+    OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY as string,
+    OPENROUTER_EMBEDING_MODEL: process.env.OPENROUTER_EMBEDING_MODEL as string,
+    OENROUTER_LLM_MODEL: process.env.OENROUTER_LLM_MODEL as string,
+    REDIS_URL: process.env.REDIS_URL as string,
   };
 };
 

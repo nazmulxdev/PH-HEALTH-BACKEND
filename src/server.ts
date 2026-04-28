@@ -2,6 +2,7 @@ import { Server } from "http";
 import app from "./app.js";
 import { config } from "./config/env";
 import { seedSuperAdmin } from "./utils/seed.js";
+import { redisService } from "./lib/redis.js";
 
 const port = config.PORT;
 
@@ -9,6 +10,7 @@ let server: Server;
 
 const bootStrap = async () => {
   try {
+    await redisService.connect().catch(console.error);
     await seedSuperAdmin();
     server = app.listen(port, () => {
       console.log("This server is running on the port :", port);
